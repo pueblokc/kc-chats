@@ -7890,8 +7890,14 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 "lng_filters_chats_count#one" = "{count} chat";
 "lng_filters_chats_count#other" = "{count} chats";
 "lng_filters_create" = "Create new folder";
-"lng_filters_about" = "Create folders for different groups of chats and quickly switch between them.";
+"lng_filters_about" = "Separate people, groups, channels and bots into folders. Add a starter below or create your own. Saved folders sync to your other Telegram apps.";
 "lng_filters_recommended" = "Recommended folders";
+"lng_kc_folders_starters" = "Start with clear chat types";
+"lng_kc_folders_people" = "Direct conversations with people, excluding bots and archived chats.";
+"lng_kc_folders_groups" = "Group conversations, excluding archived chats.";
+"lng_kc_folders_channels" = "Channel broadcasts, excluding archived chats.";
+"lng_kc_folders_bots" = "Automated accounts, excluding archived chats.";
+"lng_kc_about" = "KC Chats 0.1 — an independent Telegram Desktop fork. Modifications copyright (C) 2026 KCCS. Telegram Desktop and contributors retain their copyrights. Source: https://github.com/pueblokc/kc-chats";
 "lng_filters_recommended_add" = "Add";
 "lng_filters_restore" = "Undo";
 "lng_filters_new" = "New Folder";

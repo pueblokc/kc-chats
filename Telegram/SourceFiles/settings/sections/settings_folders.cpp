@@ -773,6 +773,42 @@ not_null<Ui::VerticalLayout*> SetupFoldersList(
 	return wrap;
 }
 
+[[nodiscard]] std::vector<Data::SuggestedFilter> StarterFolders() {
+	const auto make = [](QString title, Flags flags, QString description) {
+		return Data::SuggestedFilter{
+			Data::ChatFilter(
+				0,
+				{ Ui::Text::WithEntities(title), true },
+				QString(),
+				std::nullopt,
+				flags | Flag::NoArchived,
+				{}, {}, {}),
+			std::move(description),
+		};
+	};
+	return {
+		make(tr::lng_filters_name_people(tr::now),
+			Flag::Contacts | Flag::NonContacts,
+			tr::lng_kc_folders_people(tr::now)),
+		make(tr::lng_filters_include_groups(tr::now), Flag::Groups,
+			tr::lng_kc_folders_groups(tr::now)),
+		make(tr::lng_filters_include_channels(tr::now), Flag::Channels,
+			tr::lng_kc_folders_channels(tr::now)),
+		make(tr::lng_filters_include_bots(tr::now), Flag::Bots,
+			tr::lng_kc_folders_bots(tr::now)),
+	};
+}
+
+[[nodiscard]] bool SameFolderRules(
+		const Data::ChatFilter &a,
+		const Data::ChatFilter &b) {
+	const auto mask = Flag::RulesMask | Flag::Chatlist
+		| Flag::NewChats | Flag::ExistingChats;
+	return (a.flags() & mask) == (b.flags() & mask)
+		&& a.always() == b.always()
+		&& a.never() == b.never();
+}
+
 void SetupRecommendedSection(
 		not_null<Window::SessionController*> controller,
 		not_null<Ui::VerticalLayout*> container,
@@ -859,7 +895,7 @@ void SetupRecommendedSection(
 	Ui::AddSkip(aboutRows);
 	const auto recommendedTitle = Ui::AddSubsectionTitle(
 		aboutRows,
-		tr::lng_filters_recommended());
+		tr::lng_kc_folders_starters());
 	if (highlights) {
 		highlights->push_back({
 			u"folders/add-recommended"_q,
@@ -883,40 +919,36 @@ void SetupRecommendedSection(
 	}, container->lifetime());
 	setTagsProgress(session->data().chatsFilters().tagsEnabled());
 
-	rpl::single(rpl::empty) | rpl::then(
-		session->data().chatsFilters().suggestedUpdated()
-	) | rpl::map([=] {
-		return session->data().chatsFilters().suggestedFilters();
-	}) | rpl::filter([=](const std::vector<Data::SuggestedFilter> &list) {
-		return !list.empty();
-	}) | rpl::take(
-		1
-	) | rpl::on_next([=](
-			const std::vector<Data::SuggestedFilter> &suggestions) {
-		for (const auto &suggestion : suggestions) {
-			const auto &filter = suggestion.filter;
-			if (ranges::contains(state->rows, filter, &FilterRow::filter)) {
-				continue;
-			}
-			state->suggested = state->suggested.current() + 1;
-			const auto button = aboutRows->add(object_ptr<FilterRowButton>(
-				aboutRows,
-				session,
-				filter,
-				suggestion.description));
-			button->addRequests(
-				) | rpl::on_next([=] {
-				if (showLimitReached()) {
-					return;
-				}
-				addFilter(filter);
-				state->suggested = state->suggested.current() - 1;
-				delete button;
-			}, button->lifetime());
+	const auto alreadyPresent = [=](const Data::ChatFilter &filter) {
+		return ranges::any_of(state->rows, [&](const FilterRow &row) {
+			return SameFolderRules(row.filter, filter);
+		});
+	};
+	for (const auto &suggestion : StarterFolders()) {
+		const auto &filter = suggestion.filter;
+		if (alreadyPresent(filter)) {
+			continue;
 		}
-		aboutRows->resizeToWidth(container->width());
-		Ui::AddSkip(aboutRows, st::defaultVerticalListSkip);
-	}, aboutRows->lifetime());
+		state->suggested = state->suggested.current() + 1;
+		const auto button = aboutRows->add(object_ptr<FilterRowButton>(
+			aboutRows,
+			session,
+			filter,
+			suggestion.description));
+		button->addRequests(
+			) | rpl::on_next([=] {
+			if (showLimitReached()) {
+				return;
+			}
+			if (!alreadyPresent(filter)) {
+				addFilter(filter);
+			}
+			state->suggested = state->suggested.current() - 1;
+			delete button;
+		}, button->lifetime());
+	}
+	aboutRows->resizeToWidth(container->width());
+	Ui::AddSkip(aboutRows, st::defaultVerticalListSkip);
 
 	auto showSuggestions = rpl::combine(
 		state->suggested.value(),

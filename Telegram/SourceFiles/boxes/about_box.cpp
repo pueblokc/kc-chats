@@ -65,7 +65,7 @@ rpl::producer<TextWithEntities> Text3() {
 } // namespace
 
 void AboutBox(not_null<Ui::GenericBox*> box) {
-	box->setTitle(u"Telegram Desktop"_q);
+	box->setTitle(u"KC Chats"_q);
 
 	auto layout = box->verticalLayout();
 
@@ -124,6 +124,7 @@ void AboutBox(not_null<Ui::GenericBox*> box) {
 		Ui::AddSkip(layout, st::aboutSkip);
 	};
 
+	addText(tr::lng_kc_about(tr::marked));
 	addText(Text1());
 	addText(Text2());
 	addText(Text3());

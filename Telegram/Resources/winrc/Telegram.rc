@@ -60,11 +60,11 @@ BEGIN
     BEGIN
         BLOCK "040904b0"
         BEGIN
-            VALUE "CompanyName", "Telegram FZ-LLC"
-            VALUE "FileDescription", "Telegram Desktop"
+            VALUE "CompanyName", "KCCS"
+            VALUE "FileDescription", "KC Chats"
             VALUE "FileVersion", "7.3.3.0"
-            VALUE "LegalCopyright", "Copyright (C) 2014-2026"
-            VALUE "ProductName", "Telegram Desktop"
+            VALUE "LegalCopyright", "Telegram contributors (C) 2014-2026; KCCS modifications (C) 2026"
+            VALUE "ProductName", "KC Chats"
             VALUE "ProductVersion", "7.3.3.0"
         END
     END

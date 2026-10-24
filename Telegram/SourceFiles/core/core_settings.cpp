@@ -1772,7 +1772,7 @@ void Settings::resetOnLastLogout() {
 	_ivZoom = 0;
 	_recordVideoMessages = false;
 	_videoQuality = {};
-	_chatFiltersHorizontal = false;
+	_chatFiltersHorizontal = true;
 	_chatFiltersTabsMode = Ui::ChatsFiltersTabsMode::Default;
 	_pullToNextChannel = true;
 	_quickDialogAction = Dialogs::Ui::QuickDialogAction::Disabled;

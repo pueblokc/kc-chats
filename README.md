@@ -1,4 +1,13 @@
-# [Telegram Desktop][telegram_desktop] – Official Messenger
+# KC Chats
+
+An independent fork of Telegram Desktop focused on clearer chat organization.
+The first pass offers **People / Groups / Channels / Bots** starter folders
+and enables labeled horizontal folder tabs by default.
+
+See [KC_CHATS.md](KC_CHATS.md) for setup, isolation, and build status.
+This repository is a development fork; no verified executable is published yet.
+
+## Upstream Telegram Desktop
 
 This is the complete source code and the build instructions for the official [Telegram][telegram] messenger desktop client, based on the [Telegram API][telegram_api] and the [MTProto][telegram_proto] secure protocol.
 

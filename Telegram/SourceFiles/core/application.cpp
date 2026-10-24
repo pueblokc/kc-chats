@@ -487,9 +487,7 @@ void Application::run() {
 }
 
 void Application::autoRegisterUrlScheme() {
-	if (!OptionSkipUrlSchemeRegister.value()) {
-		InvokeQueued(this, [] { RegisterUrlScheme(); });
-	}
+	// Keep the user's existing Telegram link handler when starting this fork.
 }
 
 void Application::showAccount(not_null<Main::Account*> account) {
