@@ -9331,3 +9331,4 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 "lng_passcode_strength_advice_fine" = "This passcode is hard to guess.";
 
 // Keys finished
+"lng_kc_intro_about" = "Your Telegram conversations, clearly organized. An independent desktop app by KCCS.";

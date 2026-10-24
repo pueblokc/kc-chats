@@ -15,23 +15,31 @@ It uses Telegram's service and existing chat-filter implementation.
 ## Windows identity
 
 The Windows binary is named KCChats.exe and has its own icon, app ID, application
-name, and default data directory (%APPDATA%/KC Chats). Official auto-updates and
+name, and separate profile. This Debug build stores tdata beside KCChats.exe;
+the release fallback directory is %APPDATA%/KC Chats. Official auto-updates and
 crash reporting are disabled. Startup does not register Telegram URL protocols.
 The existing explicit URL-handler action remains available if the user chooses it.
 Do not point KC Chats at an existing Telegram profile or copy its tdata directory.
 
 ## Build and acceptance
 
-The source changes have passed git diff --check. The Windows compiler was detected,
-but initial configuration stopped because Qt was not installed. Upstream's Windows
-dependency preparation is in progress. Compilation and interactive acceptance are
-pending; this is not yet a verified usable app.
+The source changes have passed git diff --check. All 36 upstream dependency
+preparation stages completed, including Qt 6.11.2, and Windows configuration
+succeeded with Visual Studio 2022 Build Tools. The Debug application build
+completed and its welcome screen opened successfully. Folder classification with
+real conversations remains pending a user login.
 
 Prepare dependencies with Telegram/build/prepare/prepare.py using the upstream
 Windows instructions. For development, configure with:
 
-    python Telegram/configure.py x64 -D TDESKTOP_API_TEST=ON
-    cmake --build out --config Debug --target Telegram
+    python Telegram/configure.py x64 -D TDESKTOP_API_TEST=ON -D CMAKE_CONFIGURATION_TYPES=Debug
+    set _CL_=/MP6
+    cmake --build out --config Debug --target Telegram --parallel 1
+
+Run these commands in a Visual Studio x64 developer command prompt. The compiler
+worker limit is deliberate: the first unrestricted application build exhausted
+process resources. A two-worker retry was stable; after checking memory headroom,
+the build was restarted with six compiler workers and a single build job.
 
 Use Debug builds for local development. The public test API configuration is for
 development only. Before distributing a build, obtain an application API ID and
